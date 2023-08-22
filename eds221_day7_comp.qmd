@@ -58,3 +58,40 @@ Using count()
 penguins %>% 
   count(species, island, sex)
 ```
+
+```{r}
+# using the datapasta add-in, copied and pasted from the day's interactive
+animals <- data.frame(
+  stringsAsFactors = FALSE,
+          location = c("lagoon", "bluff", "creek", "oaks", "bluff"),
+           species = c("bobcat", "coyote", "fox", "squirrel", "bobcat"),
+          maturity = c("adult", "juvenile", "adult", "juvenile", "adult")
+)
+```
+
+```{r}
+# using the datapasta add-in, copied and pasted from the day's interactive
+locations <- data.frame(
+  stringsAsFactors = FALSE,
+          location = c("beach", "lagoon", "bluff", "oaks"),
+    full_site_name = c("Goleta Beach","UCSB Lagoon",
+                       "Ellwood Mesa","Fremont Campground"),
+      jurisdiction = c("SB City", "UCSB", "SB City", "USFS")
+)
+```
+
+## practicing joins
+
+full join: full_join(x,y) - (left table, right table)
+
+```{r}
+full_join_example <- full_join(animals, locations)
+```
+
+```{r}
+left_join_example <- left_join(animals, locations)
+```
+
+```{r}
+inner_join_example <- inner_join(animals, locations)
+```
