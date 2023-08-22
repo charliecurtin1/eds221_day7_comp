@@ -1,0 +1,60 @@
+---
+title: "Day Interactive"
+format: html
+editor: visual
+---
+
+## Data wrangling refresher
+
+```{r}
+library(tidyverse)
+library(palmerpenguins)
+```
+
+1.  starting from penguins, write a single piped sequence in which you include penguins at Dream and Biscoe Islands, remove the year and sex variables, add a new column body mass kg, with penguin mass converted from grams to kg, and rename the island variable to location
+
+```{r}
+penguins_sub1 <- penguins %>% 
+  filter(island %in% c("Dream", "Biscoe")) %>% 
+  select(-year, -sex) %>% 
+  mutate(body_mass_kg = body_mass_g / 1000) %>% 
+  rename(location = island)
+```
+
+starting from penguins, write a single piped sequence to:
+
+-   limit to adelie penguins
+
+-   remove any observations where flipper_length_mm is NA (!is.na() or drop_na()
+
+-   group the data by sex
+
+-   create a summary table that contains, mean, standard deviation, and sample size of flipper lengths for male and female Adelie penguins
+
+```{r}
+penguins_sub2 <- penguins %>% 
+  filter(species == "Adelie") %>% 
+  drop_na(flipper_length_mm, sex) %>% 
+  group_by(sex) %>% 
+  summarize(mean_length = mean(flipper_length_mm),
+            sd_length = sd(flipper_length_mm),
+            sample_size = n())
+
+# Or, using !is.na(), which can only use one input
+penguins_sub3 <- penguins %>% 
+  filter(species == "Adelie", 
+         !is.na(flipper_length_mm),
+         !is.na(sex)) %>% 
+  group_by(sex) %>% 
+  summarize(mean_length = mean(flipper_length_mm),
+            sd_length = sd(flipper_length_mm),
+            sample_size = n())
+```
+
+Using count()
+
+```{r}
+# count() wraps group_by and summarize and n to get counts of observations. If you want summary statistics, you still want to use all 3 together
+penguins %>% 
+  count(species, island, sex)
+```
