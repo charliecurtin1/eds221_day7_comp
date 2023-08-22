@@ -95,3 +95,133 @@ left_join_example <- left_join(animals, locations)
 ```{r}
 inner_join_example <- inner_join(animals, locations)
 ```
+
+# Date-times with lubridate()
+
+ymd- if date is in year-month-day
+
+mdy- if date is in month-day-year
+
+dmy- if date is in day-month-year
+
+```{r}
+date1 <- lubridate::mdy("03-15-1998")
+
+date2<- lubridate::mdy("11/7/2003")
+
+date3 <- lubridate::dmy("08-Jun-1974")
+
+date4 <- lubridate::ymd("19740203")
+
+# can we break it? try a month that has a value that doesnt work, or give it the wrong lubridate function
+date5 <- ymd("06-07-2001")
+```
+
+# adding times to our dates
+
+```{r}
+time_1 <- ymd_hm("2020-08-12 11:18")
+```
+
+Parse June 2, 1982 at 4 pm UTC (16:00) as a date
+
+```{r}
+time_2 <- mdy_h("June 2, 1982 4 pm")
+```
+
+# convert time zones
+
+```{r}
+with_tz(time_2, "America/El_Salvador")
+
+# Sys.time()- current time
+
+now <- with_tz(Sys.time(), "America/El_Salvador")
+```
+
+# access different parts of date-times
+
+```{r}
+lubridate::day(now)
+
+lubridate::week(now)
+
+lubridate::second(now)
+
+hour(now)
+```
+
+```{r}
+urchin_counts <- data.frame(
+  date = c("Oct 12, 2004", "Oct 18, 2007", "February 12, 2003", "February 14, 2008"),
+  species = c("purple", "red", "red", "red"),
+  size_mm = c(19, 25, 16, 17)
+)
+```
+
+```{r}
+# change date to ISO 8601, add a new column that parses the month, summarize mean size by month
+urchin_mean_by_month <- urchin_counts %>% 
+  mutate(date = lubridate::mdy(date)) %>% 
+  mutate(month = month(date)) %>% 
+  group_by(month) %>% 
+  summarize(mean_size = mean(size_mm, na.rm = TRUE))
+```
+
+# strings with stringr
+
+use str_detect() to detect a string pattern
+
+```{r}
+my_string <- "I love surfing and hiking and the outdoors"
+
+str_detect(my_string, pattern = "surfing")
+
+str_detect(my_string, pattern = "fuck")
+```
+
+```{r}
+# detect strings in a vector - looks through the entire vector
+my_string2 <- c("burrito", "tacos", "Taco salad", "wet burrito") 
+
+str_detect(my_string2, pattern = "taco")
+```
+
+```{r}
+# filter based on a string pattern
+starwars %>% 
+  filter(str_detect(name, pattern = "Skywalker"))
+```
+
+```{r}
+# replace strings based on a string pattern
+starwars %>% 
+  mutate(name_new = str_replace(name, pattern = "Sky", replacement = "Fire"))
+```
+
+str_trim to get rid of leading and trailing whitespace
+
+str_squish to get rid of leading and trailing whitespace and excess interior whitespace
+
+```{r}
+my_string3 <- "     Hi   my name is     Charlie !!    "
+
+str_trim(my_string3)
+
+str_squish(my_string3)
+```
+
+Case conversions
+
+```{r}
+str_to_lower(my_string3)
+
+str_to_upper(my_string3)
+
+str_to_title(my_string3)
+
+str_to_sentence(my_string3)
+
+starwars %>% 
+  mutate(species_lower = str_to_lower(species))
+```
